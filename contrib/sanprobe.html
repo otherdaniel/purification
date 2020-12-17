@@ -1,0 +1,202 @@
+<html>
+<title>Sanitizer Probe</title>
+<script>
+const elems = [
+  "eprobe",  // elems[0] is a not-browser-defined element.
+
+  // from: https://source.chromium.org/chromium/chromium/src/+/master:third_party/blink/renderer/core/html/html_tag_names.json5
+  "a", "abbr", "acronym", "address", "applet", "article", "aside", "audio",
+  "b", "basefont", "bdi", "bdo", "bgsound", "big", "blockquote", "br", "button",
+  "canvas", "caption", "center", "cite", "code", "col", "colgroup", "command",
+  "content", "data", "datalist", "dd", "del", "dfn", "dir", "dl", "dt", "em",
+  "embed", "fieldset", "figcaption", "figure", "footer", "form", "frameset",
+  "h1", "h2", "h3", "h4", "h5", "h6", "header", "hgroup", "hr", "i", "iframe",
+  "image", "img", "input", "ins", "kbd", "keygen", "label", "layer", "legend",
+  "li", "link", "listing", "main", "mark", "meter", "nav", "nobr", "noembed",
+  "noframes", "nolayer", "noscript", "object", "ol", "optgroup", "option",
+  "output", "p", "picture", "plaintext", "portal", "progress", "q", "rb", "rp",
+  "rt", "rtc", "ruby", "s", "samp", "script", "section", "select", "shadow",
+  "slot", "small", "strike", "strong", "style", "sub", "summary", "sup",
+  "tbody", "td", "textarea", "tfoot", "th", "thead", "time", "tr", "track",
+   "tt", "u", "ul", "var", "video", "wbr", "xmp",
+];
+const attrs = [
+  "aprobe", "onprobe",
+
+  // https://source.chromium.org/chromium/chromium/src/+/master:third_party/blink/renderer/core/html/html_attribute_names.json5
+  "abbr", "accept-charset", "accept", "accesskey", "action", "align", "alink",
+  "allow", "allowfullscreen", "allowpaymentrequest", "alt", "archive", "as",
+  "async", "autocapitalize", "autocomplete", "autocorrect", "autofocus",
+  "autoplay", "autopictureinpicture", "axis", "background", "behavior",
+  "bgcolor", "border", "bordercolor", "capture", "cellpadding", "cellspacing",
+  "char", "challenge", "charoff", "charset", "checked", "cite", "class",
+  "classid", "clear", "code", "codebase", "codetype", "color", "cols",
+  "colspan", "compact", "content", "contenteditable", "controls",
+  "controlslist", "conversiondestination", "coords", "crossorigin", "csp",
+  "data", "datetime", "declare", "decoding", "default", "defer", "dir",
+  "direction", "dirname", "disabled", "disablepictureinpicture",
+  "disableremoteplayback", "disallowdocumentaccess", "download", "draggable",
+  "elementtiming", "enctype", "end", "enterkeyhint", "event", "exportparts",
+  "face", "for", "form", "formaction", "formenctype", "formmethod",
+  "formnovalidate", "formtarget", "frame", "frameborder", "headers", "height",
+  "hidden", "high", "href", "hreflang", "hreftranslate", "hspace", "http-equiv",
+  "id", "imagesizes", "imagesrcset", "importance", "impressiondata",
+  "impressionexpiry", "incremental", "inert", "inputmode", "integrity", "is",
+  "ismap", "keytype", "kind", "invisible", "label", "lang", "language",
+  "latencyhint", "leftmargin", "link", "list", "loading", "longdesc", "loop",
+  "low", "lowsrc", "manifest", "marginheight", "marginwidth", "max",
+  "maxlength", "mayscript", "media", "method", "min", "minlength", "multiple",
+  "muted", "name", "nohref", "nomodule", "nonce", "noresize", "noshade",
+  "novalidate", "nowrap", "object", "onabort", "onafterprint",
+  "onanimationstart", "onanimationiteration", "onanimationend", "onauxclick",
+  "onbeforecopy", "onbeforecut", "onbeforepaste", "onbeforeprint",
+  "onbeforeunload", "onblur", "oncancel", "oncanplay", "oncanplaythrough",
+  "onchange", "onclick", "onclose", "oncontextmenu", "oncopy", "oncuechange",
+  "oncut", "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave",
+  "ondragover", "ondragstart", "ondrop", "ondurationchange", "onemptied",
+  "onended", "onerror", "onfocus", "onfocusin", "onfocusout", "onformdata",
+  "ongotpointercapture", "onhashchange", "oninput", "oninvalid", "onkeydown",
+  "onkeypress", "onkeyup", "onlanguagechange", "onload", "onloadeddata",
+  "onloadedmetadata", "onloadstart", "onlostpointercapture", "onmessage",
+  "onmessageerror", "onmousedown", "onmouseenter", "onmouseleave",
+  "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onmousewheel",
+  "ononline", "onoffline", "onorientationchange", "onoverscroll", "onpagehide",
+  "onpageshow", "onpaste", "onpause", "onplay", "onplaying", "onpointercancel",
+  "onpointerdown", "onpointerenter", "onpointerleave", "onpointermove",
+  "onpointerout", "onpointerover", "onpointerrawupdate", "onpointerup",
+  "onpopstate", "onportalactivate", "onprogress", "onratechange", "onreset",
+  "onresize", "onscroll", "onscrollend", "onsearch", "onseeked", "onseeking",
+  "onselect", "onselectstart", "onselectionchange", "onshow", "onstalled",
+  "onstorage", "onsuspend", "onsubmit", "ontimeupdate", "ontimezonechange",
+  "ontoggle", "ontouchstart", "ontouchmove", "ontouchend", "ontouchcancel",
+  "ontransitionend", "onunload", "onvolumechange", "onwaiting",
+  "onwebkitanimationstart", "onwebkitanimationiteration",
+  "onwebkitanimationend", "onwebkitfullscreenchange", "onwebkitfullscreenerror",
+  "onwebkittransitionend", "onwheel", "open", "optimum", "part", "pattern",
+  "placeholder", "playsinline", "ping", "policy", "poster", "preload", "pseudo",
+  "readonly", "referrerpolicy", "rel", "reportingorigin", "required",
+  "resources", "rev", "reversed", "role", "rows", "rowspan", "rules", "sandbox",
+  "scheme", "scope", "scrollamount", "scrolldelay", "scrolling", "select",
+  "selected", "shadowroot", "shadowrootdelegatesfocus", "shape", "size",
+  "sizes", "slot", "span", "spellcheck", "src", "srcset", "srcdoc", "srclang",
+  "standby", "start", "step", "style", "summary", "tabindex", "target", "text",
+  "title", "topmargin", "translate", "truespeed", "trusttoken", "type",
+  "usemap", "valign", "value", "valuetype", "version", "vlink", "vspace",
+  "virtualkeyboardpolicy", "webkitdirectory", "width", "wrap",
+];
+
+function format(config) {
+  function prettify(key, value) {
+    if (!value)
+      return undefined;
+    else if (value instanceof Map)
+      return Object.fromEntries(value.entries());
+    else
+      return value;
+  }
+  return JSON.stringify(config, prettify, 2);
+}
+
+function run() {
+  document.getElementById("result").textContent = format(probeBuiltIn());
+}
+
+function probeBuiltIn() {
+  if (!("Sanitizer" in globalThis))
+    return "No Sanitizer class found.";
+  let san_fn = Sanitizer.prototype.sanitizeToString.bind(new Sanitizer());
+  if (!san_fn)
+    return "Cannot instantiate sanitizer";
+  return probe(san_fn);
+}
+
+function probe(san_fn) {
+  function filter_map(map, expected) {
+    let matches = Array
+        .from(map, ([tag, res]) => res == expected ? tag : null)
+        .filter(Boolean);
+    return (matches && matches.length) ? matches : null;
+  }
+  function filter_map_map(mapmap, expected) {
+    let r = new Map();
+    for([key, map] of mapmap.entries()) {
+      let matches = filter_map(map, expected);
+      if (matches) r.set(key, matches);
+    }
+    return r.size ? r : null;
+  }
+  function probe_elements(san_fn, config) {
+    // Probe elements (probe string: '<elem>text</elem>')
+    let elem_probes = new Map();
+    for(let e of elems) {
+      let p = san_fn(`<${e}>text</${e}>`);
+      if (p == "")
+        elem_probes.set(e, "drop");
+      else if (p == "text")
+        elem_probes.set(e, "block");
+      else if (p.startsWith("<" + e))
+        elem_probes.set(e, "allow");
+      else
+        elem_probes.set(e, "weird");
+    }
+
+    // Derive allow-vs-block from "eprobe" element.
+    let allow = elem_probes.get(elems[0]) == "allow";
+
+    // Derive config from element probes.
+    config["allowElements"] = !allow && filter_map(elem_probes, "allow") || null;
+    config["blockElements"] = allow && filter_map(elem_probes, "block") || null;
+    config["dropElements"] = allow && filter_map(elem_probes, "drop") || null;
+    config["weirdElements"] = filter_map(elem_probes, "weird");
+  }
+  function probe_attributes(san_fn, config) {
+    // Probe attributes(probe string: '<elem attr="val">text</elem>')
+    let attr_probes = new Map();
+    for (let a of attrs) {
+      let tmp = new Map();
+      for(let e of elems) {
+        let p = san_fn(`<${e} ${a}="val">text</${e}>`);
+        if (p.indexOf(a + "=\"val\"") != -1)
+          tmp.set(e, "allow");
+        else if (p.startsWith("<" + e + ">"))
+          tmp.set(e, "drop");
+        else if (p == "" || p == "text")
+          ;
+        else
+          tmp.set(e, "weird");
+      }
+
+      // If all elements have the same result, replace it with ["*"].
+      let all_the_same = (Array.from(tmp.values()).reduce(
+          (acc, curr) => (acc == curr) ? acc : null)) != null;
+      if (all_the_same) {
+        let [[, anyvalue]] = tmp;
+        tmp = new Map([["*", anyvalue]]);
+      }
+      attr_probes.set(a, tmp);
+    }
+
+    // Derive allow-bs-block from "aprobe" attribute.
+    let attr_allow = attr_probes.get(attrs[0]).values().next().value == "allow";
+
+    // Derive config from "aprobe" attribute probe.
+    config["allowAttr"] = !attr_allow && filter_map_map(attr_probes, "allow") || null
+    config["dropAttr"] = attr_allow && filter_map_map(attr_probes, "drop") || null;
+    config["weirdAttr"] = filter_map_map(attr_probes, "weird");
+  }
+
+  if (!san_fn)
+    throw "No sanitizer. Can't work."
+
+  let config = {};
+  probe_elements(san_fn, config);
+  probe_attributes(san_fn, config);
+  return config;
+}
+</script>
+<body onload="run()">
+<h1>Sanitizer Probe</h1>
+<div id="workarea" style="display: none;"></div>
+<pre id="result">
+</pre>
+</html>
