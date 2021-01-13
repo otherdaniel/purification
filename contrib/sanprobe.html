@@ -106,7 +106,7 @@ function probeBuiltIn() {
     return "No Sanitizer class found.";
   let san_fn = Sanitizer.prototype.sanitizeToString.bind(new Sanitizer());
   if (!san_fn)
-    return "Cannot instantiate sanitizer";
+    return "Cannot instantiate sanitizer.";
   return probe(san_fn);
 }
 
@@ -134,7 +134,7 @@ function probe(san_fn) {
         elem_probes.set(e, "drop");
       else if (p == "text")
         elem_probes.set(e, "block");
-      else if (p.startsWith("<" + e))
+      else if (p.startsWith(`<${e}>`))
         elem_probes.set(e, "allow");
       else
         elem_probes.set(e, "weird");
@@ -155,6 +155,10 @@ function probe(san_fn) {
     for (let a of attrs) {
       let tmp = new Map();
       for(let e of elems) {
+        // Let's skip the "weird" elements outright. They tend to cause lots
+        // of low-value entries.
+        if (config["weirdElements"].includes(e)) continue;
+
         let p = san_fn(`<${e} ${a}="val">text</${e}>`);
         if (p.indexOf(a + "=\"val\"") != -1)
           tmp.set(e, "allow");
@@ -176,7 +180,7 @@ function probe(san_fn) {
       attr_probes.set(a, tmp);
     }
 
-    // Derive allow-bs-block from "aprobe" attribute.
+    // Derive allow-vs-block from "aprobe" attribute.
     let attr_allow = attr_probes.get(attrs[0]).values().next().value == "allow";
 
     // Derive config from "aprobe" attribute probe.
