@@ -1,0 +1,149 @@
+# namespace: http://www.w3.org/1999/xhtml
+a            default
+abbr         default
+acronym      default
+address      default
+applet       forbidden  # Legacy element that executes Java code.
+area         default
+article      default
+aside        default
+audio        default
+b            default
+base         baseline  # XXX - Not in current lists.
+basefont     forbidden  # XXX - Why forbidden?
+bdi          default
+bdo          default
+bgsound      baseline  # XXX - Plays sound in background, but no XSS.
+big          default
+blink        baseline  # XXX - Long-deprecated element.
+blockquote   default
+body         default  # Should this be baseline?
+br           default
+button       default
+canvas       default
+caption      default
+center       default
+cite         default
+code         default
+col          default
+colgroup     default
+command      baseline  # XXX- In current default list. Does this even exist?
+content      baseline  # XXX - "Shadow DOM Content Placeholder".
+data         baseline  # why?
+datalist     default
+dd           default
+decorator    baseline  # XXX - In old baseline. I don't think this exists.
+del          default
+details      default
+dfn          default
+dialog       default
+dir          default
+div          default
+dl           default
+dt           default
+element      baseline  # XXX - In old baseline. I don't think this exists.
+em           default
+embed        forbidden  # Legacy element that executes various plugins.
+fencedframe  forbidden  # An iframe variant.
+fieldset     default
+figcaption   default
+figure       default
+font         default
+footer       default
+form         default
+frame        forbidden  # Legacy element for the original frame type.
+frameset     forbidden  # Legacy element which contains frames.
+h1           default
+h2           default
+h3           default
+h4           default
+h5           default
+h6           default
+head         default
+header       default
+hgroup       default
+hr           default
+html         default
+i            default
+iframe       forbidden  # Iframe loads and executes script.
+image        baseline  # XXX - Deprecated. Gets translated to <img> by parser.
+img          default
+input        default
+ins          default
+kbd          default
+keygen       default  # XXX - Not in current baseline. Declarative crypto-key generation.
+label        default
+layer        default  # XXX - Layer with src-URL is effectively a frame. Should be forbidden?
+legend       default
+li           default
+link         default
+listing      default
+main         default
+map          default
+mark         default
+marquee      default
+menu         default
+menuitem     baseline  # XXX - Long deprecated.
+meta         default  # XXX - Can declare CSP; can reload page; has no use in document body.
+meter        default
+nav          default
+nobr         default
+noembed      forbidden  # see embed
+noframes     forbidden  # see frame
+nolayer      forbidden  # see layer
+noscript     forbidden  # XXX - see script
+object       forbidden  # Embeds active content in the page.
+ol           default
+optgroup     default
+option       default
+output       default
+p            default
+param        forbidden  # XXX - param supplies parameters for object, which is forbidden.
+picture      default
+plaintext    baseline  # XXX - Non-standard parser behaviour.
+popup        baseline  # XXX - Not sure this exists.
+portal       baseline  # XXX - Frame-like element, but for navigation.
+pre          default
+progress     default
+q            default
+rb           default  # XXX - Ruby body. Was probably forgotten in old baseline.
+rp           default
+rt           default
+rtc          default  # XXX - Ruby text conteiner. See rb.
+ruby         default
+s            default
+samp         default
+script       forbidden  # script executes script.
+section      default
+select       default
+selectmenu   default  # XXX - Not in old lists.
+slot         baseline  # XXX - web components.
+small        default
+source       default
+spacer       default  # XXX - Not in old lists.
+span         default
+strike       default
+strong       default
+style        default
+sub          default
+summary      default
+sup          default
+table        default
+tbody        default
+td           default
+template     baseline  # web components
+textarea     baseline  # XXX - Non-standard parser behaviour.
+tfoot        default
+th           default
+thead        default
+time         default
+title        baseline  # XXX - Not in old lists. Not useful, but also no XSS.
+tr           default
+track        default
+tt           default
+u            default
+ul           default
+var          default
+video        default
+wbr          default
+xmp          forbidden  # Non-standard parser behaviour.
