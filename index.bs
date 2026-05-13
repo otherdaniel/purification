@@ -1033,13 +1033,12 @@ beginning with |node|. It consistes of these steps:
        then call [=sanitize core=] on |child|'s [=Element/shadow root=] with
        |configuration| and |handleJavascriptNavigationUrls|.
     1. [=list/iterate|For each=] |attribute| in |child|'s [=Element/attribute list=]:
-      1. If [=is attribute allowed=] for |attribute| given |configuration|,
-         and |child| is [=/blocked=],
+      1. Let |attrName| be a {{SanitizerAttributeNamespace}} with |attribute|'s
+         [=Attr/local name=] and [=Attr/namespace=].
+      1. If [=is attribute allowed=] for |attrName| given |configuration|,
+         and |elementName| is [=/blocked=],
          then [=/remove an attribute|remove=] |attribute|.
-
       1. If |handleJavascriptNavigationUrls|:
-        1. Let |attrName| be a {{SanitizerAttributeNamespace}} with |attribute|'s
-           [=Attr/local name=] and [=Attr/namespace=].
         1. If &laquo;[|elementName|, |attrName|]&raquo; matches an entry in
            the [=built-in navigating URL attributes list=], and if |attribute|
            [=contains a javascript: URL=], then [=/remove an attribute|remove=]
@@ -1059,13 +1058,11 @@ beginning with |node|. It consistes of these steps:
 </div>
 
 <div algorithm>
-To determine <dfn>is attribute allowed</dfn> for an |attribute|,
-given a {{SanitizerConfig}} |configuration|, an {{Element}} |current element|:
+To determine <dfn>is attribute allowed</dfn> for a
+{{SanitizerAttributeNamespace}} |attrName|,
+given a {{SanitizerConfig}} |configuration|,
+and an {{SanitizerElementNamespace}} |elementName|:
 
-1. Let |attrName| be a {{SanitizerAttributeNamespace}} with |attribute|'s
-    [=Attr/local name=] and [=Attr/namespace=].
-1. Let |elementName| be a {{SanitizerElementNamespace}} with |current element|'s
-    [=Element/local name=] and [=Element/namespace=].
 1. Let |elementWithLocalAttributes| be an empty [=ordered map=].
 1. If |configuration|["{{SanitizerConfig/elements}}"] [=map/exists=] and
     |configuration|["{{SanitizerConfig/elements}}"] [=SanitizerConfig/contains=]
@@ -1087,8 +1084,9 @@ given a {{SanitizerConfig}} |configuration|, an {{Element}} |current element|:
         |elementWithLocalAttributes|["{{SanitizerElementNamespaceWithAttributes/attributes}}"] [=map/with default=] &laquo; &raquo;
         [=SanitizerConfig/contains=] |attrName|.
     1. Let the [=boolean=] |isDataAttributeAllowed| be whether both,
-        "data-" is a [=code unit prefix=] of |attribute|'s
-        [=Attr/local name=] and [=Attr/namespace=] is `null`, and
+        "data-" is a [=code unit prefix=] of
+        |attrName|[{{SanitizerAttributeNamespace/name}}] and
+        |attrName|[{{SanitizerAttributeNamespace/namespace}}] is `null`, and
         |configuration|["{{SanitizerConfig/dataAttributes}}"] is true.
     1. If neither |globallyAllowed| nor |locallyAllowed| nor
         |isDataAttributeAllowed|, return [=/blocked=].
